@@ -1,37 +1,25 @@
-// import Player from '@vimeo/player';
-// import throttle from 'lodash.throttle';
+import Player from '@vimeo/player';
+import throttle from 'lodash.throttle';
 
-// const iframe = document.querySelector('#vimeo-player');
-// const player = new Player(iframe);
+const STORAGE_KEY = 'videoplayer-current-time';
 
-// const saveTimeToLocalStorage = throttle(function (currentTime) {
-//   localStorage.setItem('videoplayer-current-time', currentTime);
-// }, 1000);
+const iframe = document.querySelector('#vimeo-player');
+const player = new Player(iframe);
 
-// player.on('timeupdate', function (data) {
-//   const currentTime = data.seconds;
-//   saveTimeToLocalStorage(currentTime);
-// });
+const saveTime = throttle(function (currentTime) {
+  localStorage.setItem(STORAGE_KEY, currentTime);
+}, 1000);
 
-// document.addEventListener('DOMContentLoaded', function () {
-//   const storedTime = localStorage.getItem('videoplayer-current-time');
-//   if (storedTime) {
-//     player
-//       .setCurrentTime(storedTime)
-//       .then(function (seconds) {
-//         console.log(
-//           `Відтворення ля ляляля відео відновлено через ${seconds} секунд.`
-//         );
-//       })
-//       .catch(function (error) {
-//         switch (error.name) {
-//           case 'RangeError':
-//             console.error('Час не в межах діапазону.');
-//             break;
-//           default:
-//             console.error('Під час пошуку сталася помилка.');
-//             break;
-//         }
-//       });
-//   }
-// });
+player.on('timeupdate', function (data) {
+  const currentTime = data.seconds;
+  saveTime(currentTime);
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+  const storedTime = localStorage.getItem(STORAGE_KEY);
+  if (storedTime) {
+    player.setCurrentTime(storedTime).then(function (seconds) {
+      console.log(`Відтворення відео почнеться з ${seconds} секунди.`);
+    });
+  }
+});
