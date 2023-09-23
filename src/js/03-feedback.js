@@ -18,12 +18,14 @@ function onFormInput(e) {
 populateFormInput();
 
 function populateFormInput() {
-  if (formData) {
-    const email = document.querySelector('.feedback-form input');
-    const message = document.querySelector('.feedback-form textarea');
-    email.value = formData.email;
-    message.value = formData.message;
+  const savedDataForm = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  if (!savedDataForm) {
+    return;
   }
+  const email = document.querySelector('.feedback-form input');
+  const message = document.querySelector('.feedback-form textarea');
+  email.value = formData.email;
+  message.value = formData.message;
 }
 
 function onFormSubmit(e) {
